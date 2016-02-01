@@ -378,18 +378,62 @@
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      // отрисовка
+      var MESSAGE_WIDTH = 300;
+      var _this = this;
+      /**
+      * Функция отрисовки текста на конвасе 
+      */
+      function drawMessageText (messageText, messageWidth){
+        //Разобьем строку на массив слов
+
+        var SHADOW_OFFSET = 10;
+        var words = messageText.split(' ');
+        //Слова будем складывать в массив предложений  
+        var sentences = [];  
+        var TEXT_OFFSET = 20;
+        var outputText = words[0];
+        _this.ctx.font = '16px PT Mono';
+        for (var i = 1; i < words.length; i++ ){
+          if (_this.ctx.measureText(outputText + ' ' + words[i]).width > messageWidth){
+            sentences.push(outputText);
+            outputText = words[i];
+          } else {
+            outputText = outputText + ' ' + words[i];
+          }
+        }
+        sentences.push(outputText);
+        //Отрисовываем прямоугольник сообщения
+        var MESSAGE_HEIGHT = TEXT_OFFSET/2 + TEXT_OFFSET * sentences.length ;
+        _this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        _this.ctx.fillRect(WIDTH / 2 - MESSAGE_WIDTH / 2 + SHADOW_OFFSET, SHADOW_OFFSET, MESSAGE_WIDTH, MESSAGE_HEIGHT);
+        _this.ctx.fillStyle = '#FFFFFF';
+        _this.ctx.fillRect(WIDTH / 2 - MESSAGE_WIDTH / 2, 0, MESSAGE_WIDTH, MESSAGE_HEIGHT);
+        //Отрисовываем предложения
+        _this.ctx.fillStyle = '#000000';
+        sentences.forEach(function(item,i) {
+          _this.ctx.fillText(item, WIDTH / 2 - MESSAGE_WIDTH / 2 + TEXT_OFFSET, TEXT_OFFSET + TEXT_OFFSET*i);
+        });
+      }
+
+
+
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          //console.log('you have won!');
+          drawMessageText('Урррааа! Мы победили!', MESSAGE_WIDTH);
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          //console.log('you have failed!');
+          drawMessageText('О, нет! К сожалнию, мы проиграли!', MESSAGE_WIDTH);
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          //console.log('game is on pause!');
+          drawMessageText('Внимание, командор! Игра приостановлена!', MESSAGE_WIDTH);
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          //console.log('welcome to the game! Press Space to start');
+          drawMessageText ('Добро пожаловать в игру! Для начала нажмите Пробел. Пожалуйста, не промажьте мимо этой  большой клавиши', MESSAGE_WIDTH );
           break;
       }
     },
