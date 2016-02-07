@@ -40,14 +40,19 @@
   var formReviewFieldBlock = document.getElementsByClassName('review-fields')[0];
   var formReviewFieldName = document.getElementsByClassName('review-fields-name')[0];
   var formReviewFieldText = document.getElementsByClassName('review-fields-text')[0];
+  var formReviewSubmitButton = document.getElementsByClassName('review-submit')[0];
   //По умолчанию выбрана оценка 3 с необязательным заполнением текстового поля
   formReviewFieldText.classList.add('invisible');
+  //По умолчанию имя обязательно для заполнения и кнопка должна быть выкл
+  formReviewSubmitButton.disabled = true;
   //Функция все обязательные поля заполнены, блок .review-fields исчезает целиком
   function setReviewBlockVisibility() {
     if (formReviewFieldName.classList.contains('invisible') && formReviewFieldText.classList.contains('invisible')) {
       formReviewFieldBlock.classList.add('invisible');
+      formReviewSubmitButton.disabled = false;
     } else {
       formReviewFieldBlock.classList.remove('invisible');
+      formReviewSubmitButton.disabled = true;
     }
   }
   //Управление видимостью ревью ссылки на тестовое поле
@@ -59,12 +64,12 @@
     }
     setReviewBlockVisibility();
   }
-
-  formReviewText.onchange = function() {
+  //Выбрал событие oninput вместо onchange, иначе нельзя сразу после ввода нажать кнопку
+  formReviewText.oninput = function() {
     setReviewFieldTextVisibility();
   };
 
-  formUserNameInput.onchange = function() {
+  formUserNameInput.oninput = function() {
     if (formUserNameInput.value === '') {
       formReviewFieldName.classList.remove('invisible');
     } else {
