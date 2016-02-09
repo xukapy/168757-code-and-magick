@@ -15,7 +15,7 @@
     evt.preventDefault();
     formContainer.classList.add('invisible');
   };
-
+  var docCookies = window.docCookies;
   var formUserNameInput = document.getElementById('review-name');
   // Считываем из cookies имя пользователя
   formUserNameInput.value = docCookies.getItem('user');
