@@ -1,12 +1,25 @@
 'use strict';
 
-/* global reviews */
-
 (function() {
+  var reviews;
 
   //Прячет блок с фильтрами .reviews-filter, добавляя ему класс invisible.
   var formReviewFilter = document.querySelector('form.reviews-filter');
   formReviewFilter.classList.add('invisible');
+
+  //Пока длится загрузка файла, покажите прелоадер, добавив класс .reviews-list-loading блоку .reviews
+  var reviewsSection = document.querySelector('section.reviews');
+  reviewsSection.classList.add('reviews-list-loading');
+
+  //Фильтры
+  var filters = document.getElementsByName('reviews');
+  for (var i = 0; i < filters.length; i++) {
+    filters[i].onchange = function(event) {
+      setActiveFilter(event.target.id);
+    };
+  }
+
+  var container = document.querySelector('div.reviews-list');
 
   var starsClassName = [
     'review-rating',
@@ -51,13 +64,91 @@
     return element;
   }
 
-  //Выводит созданные элементы на страницу внутрь блока .reviews-list.
-  var divReviewList = document.querySelector('div.reviews-list');
+  getReviews();
 
-  reviews.forEach(function(review) {
-    var element = getElementFromTemplate(review);
-    divReviewList.appendChild(element);
-  });
+  function renderReviews(reviewsToRender) {
+    container.innerHTML = '';
+    var fragment = document.createDocumentFragment();
+
+    reviewsToRender.forEach(function(review) {
+      var element = getElementFromTemplate(review);
+      fragment.appendChild(element);
+    });
+    //Когда загрузка закончится, уберите прелоадер и покажите список отзывов
+    reviewsSection.classList.remove('reviews-list-loading');
+    container.appendChild(fragment);
+  }
+
+  //Загрузите данные из файла //o0.github.io/assets/json/reviews.json по XMLHttpRequest.
+  function getReviews() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '//o0.github.io/assets/json/reviews.json');
+
+    xhr.onload = function(event) {
+      var rawData = event.target.response;
+      reviews = JSON.parse(rawData);
+      renderReviews(reviews);
+    };
+
+    xhr.onerror = function() {
+      reviewsSection.classList.add('reviews-load-failure');
+    };
+
+    xhr.send();
+  }
+
+  function setActiveFilter(id) {
+    console.log(id);
+    var RECENT_LIMIT = 14 * 24 * 60 * 60 * 1000; //2 недели
+    var GOOD_RATING_LIMIT = 3; //Хорошие — с рейтингом не ниже 3
+    var filteredReviews = reviews.slice(0);
+    switch (id) {
+
+      case 'reviews-all':
+        break;
+
+      case 'reviews-recent':
+        //за две недели, отсортированных по убыванию даты
+        filteredReviews = filteredReviews.filter(function(a) {
+          return new Date() - new Date(a.date) < RECENT_LIMIT;
+        });
+        filteredReviews = filteredReviews.sort(function(a, b) {
+          return new Date(b.date) - new Date(a.date);
+        });
+        break;
+
+      case 'reviews-good':
+        filteredReviews = filteredReviews.filter(function(a) {
+          return a.rating >= GOOD_RATING_LIMIT;
+        });
+        filteredReviews = filteredReviews.sort(function(a, b) {
+          return b.rating - a.rating;
+        });
+        break;
+
+      case 'reviews-bad':
+        filteredReviews = filteredReviews.filter(function(a) {
+          return a.rating < GOOD_RATING_LIMIT;
+        });
+        filteredReviews = filteredReviews.sort(function(a, b) {
+          return a.rating - b.rating;
+        });
+        break;
+
+      case 'reviews-popular':
+        filteredReviews = filteredReviews.sort(function(a, b) {
+          return b.review_usefulness - a.review_usefulness;
+        });
+        break;
+
+      default:
+        console.log('Неизвестное значение фильтра ' + id);
+        return;
+    }
+
+    renderReviews(filteredReviews);
+
+  }
 
   formReviewFilter.classList.remove('invisible');
 
