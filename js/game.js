@@ -70,6 +70,29 @@
   };
 
   /**
+   * Универсальная троттл обертка
+   * autor Nicholas C. Zakas
+   */
+  function throttle(method, scope) {
+    clearTimeout(method._tId);
+    method._tId = setTimeout(function() {
+      method.call(scope);
+    }, 100);
+  }
+
+  var clouds = document.querySelector('div.header-clouds');
+  var isCloudsVisible = true;
+
+  function checkCloudVisibility() {
+    isCloudsVisible = ( clouds.clientHeight + clouds.getBoundingClientRect().top ) > 0;
+  }
+
+
+  window.addEventListener('scroll', function() {
+    throttle(checkCloudVisibility, window);
+  });
+
+  /**
    * Правила перерисовки объектов в зависимости от состояния игры.
    * @type {Object.<ObjectType, function(Object, Object, number): Object>}
    */
@@ -728,4 +751,13 @@
   var game = new Game(document.querySelector('.demo'));
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+  function setPause() {
+
+    (function() {
+      game.setGameStatus(window.Game.Verdict.PAUSE);
+    }).call(game);
+  }
+
+  window.addEventListener('click', setPause);
 })();
