@@ -81,13 +81,23 @@
   }
 
   var clouds = document.querySelector('div.header-clouds');
+  var demo = document.querySelector('div.demo');
   var isCloudsVisible = true;
 
   function checkCloudVisibility() {
     isCloudsVisible = ( clouds.clientHeight + clouds.getBoundingClientRect().top ) > 0;
+    if (demo.getBoundingClientRect().bottom < 0 ) {
+      game.setGameStatus(window.Game.Verdict.PAUSE);
+    }
   }
 
+  function moveClouds() {
+    if (isCloudsVisible) {
+      clouds.style.backgroundPositionX = clouds.getBoundingClientRect().top + 'px';
+    }
+  }
 
+  window.addEventListener('scroll', moveClouds);
   window.addEventListener('scroll', function() {
     throttle(checkCloudVisibility, window);
   });
@@ -751,13 +761,4 @@
   var game = new Game(document.querySelector('.demo'));
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
-
-  function setPause() {
-
-    (function() {
-      game.setGameStatus(window.Game.Verdict.PAUSE);
-    }).call(game);
-  }
-
-  window.addEventListener('click', setPause);
 })();
