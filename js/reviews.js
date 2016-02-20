@@ -19,8 +19,7 @@
   reviewsSection.classList.add('reviews-list-loading');
 
   //Фильтры с делегированием
-  var filters = document.querySelector('form.reviews-filter');
-  filters.addEventListener('change', function(event) {
+  formReviewFilter.addEventListener('change', function(event) {
     var clickedElement = event.target;
     if (clickedElement.name === 'reviews') {
       setActiveFilter(clickedElement.id);
@@ -91,7 +90,7 @@
 
     container.appendChild(fragment);
     //Если отзывов больше нет прячем кнопку "Еще отзывы"
-    if ((currentPage + 1) >= Math.ceil(filteredReviews.length / PAGE_SIZE)) {
+    if ((currentPage + 1) >= Math.ceil(reviewsToRender.length / PAGE_SIZE)) {
       buttonShowMore.classList.add('invisible');
     } else {
       buttonShowMore.classList.remove('invisible');
