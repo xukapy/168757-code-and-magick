@@ -1,12 +1,23 @@
 'use strict';
 
-/* global Review: true */
+/* global Review: true, Gallery: true */
 
 (function() {
   var reviews;
   var filteredReviews = [];
   var currentPage = 0;
   var PAGE_SIZE = 3;
+  var gallery = new Gallery();
+  //Обработчик на показ галереи с делегированием
+  document.querySelector('.photogallery').addEventListener('click', function(event) {
+   // var clickedElement = event.target;
+   // if (clickedElement.name === 'reviews') {
+   //   setActiveFilter(clickedElement.id);
+   // }
+    event.preventDefault();
+    gallery.show();
+  });
+
   //Прячет блок с фильтрами .reviews-filter, добавляя ему класс invisible.
   var formReviewFilter = document.querySelector('form.reviews-filter');
   formReviewFilter.classList.add('invisible');
