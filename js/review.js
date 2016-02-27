@@ -1,6 +1,7 @@
 'use strict';
 
-(function() {
+define([
+], function() {
 
   var starsClassName = [
     'review-rating',
@@ -49,6 +50,6 @@
 
   };
 
-  window.Review = Review;
+  return Review;
 
-})();
+});
