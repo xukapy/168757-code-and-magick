@@ -1,12 +1,25 @@
+/**
+ * @fileoverview Управление фотографиями в галереи
+ */
+
 'use strict';
 
 define([
   'photo',
   'gallery'
 ], function(Photo, Gallery) {
-
+  /**
+   * Массив элеметов со скриншотами
+   * @type {Array.<Element>}
+   */
   var imageArray = [];
+
+  /**
+   * Массив объектов фото
+   * @type {Array.<Photo>}
+   */
   var photoArray = [];
+
   var gallery = new Gallery();
 
   var images = document.querySelectorAll('.photogallery-image');
