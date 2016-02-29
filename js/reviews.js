@@ -32,6 +32,18 @@ define([
   var PAGE_SIZE = 3;
 
   /**
+   * Две недели в мсек
+   * @constant {number}
+   */
+  var RECENT_LIMIT = 14 * 24 * 60 * 60 * 1000;
+
+  /**
+   * Граница хороших рейтингов
+   * @constant {number}
+   */
+  var GOOD_RATING_LIMIT = 3;
+
+  /**
    * Текущий активный фильтр
    * @type {string}
    */
@@ -145,16 +157,7 @@ define([
     if (currentFilter === id && !force) {
       return;
     }
-    /**
-     * Две недели в мсек
-     * @constant {number}
-     */
-    var RECENT_LIMIT = 14 * 24 * 60 * 60 * 1000;
-    /**
-     * Граница хороших рейтингов
-     * @constant {number}
-     */
-    var GOOD_RATING_LIMIT = 3;
+
 
     filteredReviews = reviews.slice(0);
     switch (id) {
