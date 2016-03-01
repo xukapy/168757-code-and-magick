@@ -1,6 +1,7 @@
 'use strict';
 
-(function() {
+define([
+], function() {
 
   var keys = {
     'escape': 27,
@@ -123,5 +124,5 @@
     }
   };
 
-  window.Gallery = Gallery;
-})();
+  return Gallery;
+});

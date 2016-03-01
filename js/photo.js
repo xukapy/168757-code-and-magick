@@ -1,6 +1,7 @@
 'use strict';
 
-(function() {
+define([
+], function() {
 
   var Photo = function() {
     this._onClick = this._onClick.bind(this);
@@ -23,5 +24,5 @@
 
   Photo.prototype.onClick = null;
 
-  window.Photo = Photo;
-})();
+  return Photo;
+});

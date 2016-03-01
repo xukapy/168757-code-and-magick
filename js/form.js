@@ -1,6 +1,7 @@
 'use strict';
 
-(function() {
+define([
+], function() {
   // div с формой отзыва
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
@@ -119,4 +120,4 @@
 
     formElement.submit();
   };
-})();
+});

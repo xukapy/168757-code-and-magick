@@ -1,8 +1,9 @@
 'use strict';
 
-/* global Gallery: true, Photo: true */
-
-(function() {
+define([
+  'photo',
+  'gallery'
+], function(Photo, Gallery) {
 
   var imageArray = [];
   var photoArray = [];
@@ -27,4 +28,4 @@
 
   gallery.setPictures(photoArray);
 
-})();
+});

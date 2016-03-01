@@ -1,8 +1,8 @@
 'use strict';
 
-/* global Review: true */
-
-(function() {
+define([
+  'review'
+], function(Review) {
   var reviews;
   var filteredReviews = [];
   var currentPage = 0;
@@ -132,5 +132,5 @@
 
   formReviewFilter.classList.remove('invisible');
 
-})();
+});
 
