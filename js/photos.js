@@ -20,25 +20,28 @@ define([
    */
   var photoArray = [];
 
-  var gallery = new Gallery();
-
+  /**
+   * Коллекция элементов со скриншотами
+   * @type {NodeList}
+   */
   var images = document.querySelectorAll('.photogallery-image');
   [].forEach.call(images, function(photo) {
     imageArray[imageArray.length] = photo;
   });
 
-  photoArray = imageArray.map(function(image, index) {
+  photoArray = imageArray.map(function(image) {
     var photoObject = new Photo();
     photoObject.setData(image);
 
     photoObject.onClick = function() {
-      gallery.setCurrentPicture(index);
-      gallery.show();
+      location.hash = 'photo' + '/' + this.src;
     };
 
     return photoObject;
   });
 
+  var gallery = new Gallery();
   gallery.setPictures(photoArray);
+  gallery.restoreFromHash();
 
 });

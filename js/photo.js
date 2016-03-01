@@ -28,9 +28,10 @@ define([
   };
 
 
-  Photo.prototype._onClick = function() {
+  Photo.prototype._onClick = function(evt) {
     // Нужно вызвать коллбэк, который будет переопределен снаружи
     if (typeof this.onClick === 'function') {
+      evt.preventDefault();
       this.onClick();
     }
   };

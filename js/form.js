@@ -6,7 +6,6 @@
 
 define([
 ], function() {
-  // div с формой отзыва
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
   var formCloseButton = document.querySelector('.review-form-close');
@@ -96,11 +95,7 @@ define([
    * @param {number} mark
    */
   function setRequirePropertyByMark(mark) {
-    if (mark < MAX_NOREQUIRED_MARK) {
-      formReviewText.required = true;
-    } else {
-      formReviewText.required = false;
-    }
+    formReviewText.required = mark < MAX_NOREQUIRED_MARK;
   }
 
   //Инициализация ревью блока ссылок и кнопки отправки формы
@@ -132,6 +127,7 @@ define([
    * валидные данные имени пользователя и его оценки.
    * Срок жизни cookie — количество дней, прошедшее
    * с моего ближайшего дня рождения
+   * @param {Event} evt
    */
   formElement.onsubmit = function(evt) {
     //Прерываем дефолтное поведения события
