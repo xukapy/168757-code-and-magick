@@ -32,10 +32,17 @@ define([
   var PAGE_SIZE = 3;
 
   /**
+   * Текущий активный фильтр
+   * @type {string}
+   */
+  var currentFilter = localStorage.getItem('currentFilter') || 'reviews-all';
+  document.getElementById(currentFilter).checked = true;
+  /**
    * Блок с фильтрами
    * type {Element}
    */
   var formReviewFilter = document.querySelector('form.reviews-filter');
+
   formReviewFilter.classList.add('invisible');
 
   formReviewFilter.addEventListener('change', function(event) {
@@ -117,7 +124,7 @@ define([
     xhr.onload = function(event) {
       var rawData = event.target.response;
       reviews = JSON.parse(rawData);
-      setActiveFilter('reviews-all');
+      setActiveFilter(currentFilter, true);
       //Когда загрузка закончится, уберите прелоадер и покажите список отзывов
       reviewsSection.classList.remove('reviews-list-loading');
     };
@@ -132,10 +139,23 @@ define([
   /**
    * Установка выбранного фильтра
    * @param {string} id
+   * @param {boolean} [force]
    */
-  function setActiveFilter(id) {
-    var RECENT_LIMIT = 14 * 24 * 60 * 60 * 1000; //2 недели
-    var GOOD_RATING_LIMIT = 3; //Хорошие — с рейтингом не ниже 3
+  function setActiveFilter(id, force) {
+    if (currentFilter === id && !force) {
+      return;
+    }
+    /**
+     * Две недели в мсек
+     * @constant {number}
+     */
+    var RECENT_LIMIT = 14 * 24 * 60 * 60 * 1000;
+    /**
+     * Граница хороших рейтингов
+     * @constant {number}
+     */
+    var GOOD_RATING_LIMIT = 3;
+
     filteredReviews = reviews.slice(0);
     switch (id) {
       case 'reviews-all':
@@ -174,8 +194,13 @@ define([
         console.log('Неизвестное значение фильтра ' + id);
         return;
     }
+
+    //Если фильтр изменился, заново начинаем страницы
     currentPage = 0;
     renderReviews(filteredReviews, 0, true);
+
+    currentFilter = id;
+    localStorage.setItem('currentFilter', id);
 
   }
 
