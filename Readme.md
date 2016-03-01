@@ -4,7 +4,7 @@
 [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Сергей Кущенко](https://htmlacademy.ru/profile/id168757).
-* Наставник: `Иван Васильев`.
+* Наставник: [Алексей Хапов](https://htmlacademy.ru/profile/id118459).
 
 ### Немного о себе
 
