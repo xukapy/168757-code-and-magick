@@ -1,58 +1,112 @@
+/**
+ * @fileoverview Объект галерея
+ */
+
 'use strict';
 
 define([
 ], function() {
-
-  var keys = {
+  /**
+   * Клавиши управления галереей
+   * @enum {number}
+   */
+  var Keys = {
     'escape': 27,
     'left': 37,
     'right': 39
   };
 
+  /**
+   * @constructor
+   */
   var Gallery = function() {
+    /**
+     * Элемент самой галереи
+     * @type {Element}
+     */
     this.element = document.querySelector('.overlay-gallery');
+    /**
+     * Элемент кнопки закрытия
+     * @type {Element}
+     * @private
+     */
     this._closeButton = this.element.querySelector('.overlay-gallery-close');
+    /**
+     * Элемент листалки влево
+     * @type {Element}
+     * @private
+     */
     this._leftControl = this.element.querySelector('.overlay-gallery-control-left');
+    /**
+     * Элемент листалки вправо
+     * @type {Element}
+     * @private
+     */
     this._rightControl = this.element.querySelector('.overlay-gallery-control-right');
     this._onCloseClick = this._onCloseClick.bind(this);
     this._onDocumentKeyDown = this._onDocumentKeyDown.bind(this);
     this._onLeftControlClick = this._onLeftControlClick.bind(this);
     this._onRightControlClick = this._onRightControlClick.bind(this);
+    /**
+     * Индекс текущей фотографии
+     * @type {number|null}
+     * @private
+     */
     this._currentPhoto = null;
   };
 
+  /**
+   * Показать галерею
+   */
   Gallery.prototype.show = function() {
     this.element.classList.remove('invisible');
-
+    //Добавляем обработчики
     this._closeButton.addEventListener('click', this._onCloseClick);
     this._leftControl.addEventListener('click', this._onLeftControlClick);
     this._rightControl.addEventListener('click', this._onRightControlClick);
     document.addEventListener('keydown', this._onDocumentKeyDown);
   };
 
+  /**
+   * Скрыть галерею
+   */
   Gallery.prototype.hide = function() {
     this.element.classList.add('invisible');
-
+    //Убираем обработчики
     this._closeButton.removeEventListener('click', this._onCloseClick);
     this._leftControl.removeEventListener('click', this._onLeftControlClick);
     this._rightControl.removeEventListener('click', this._onRightControlClick);
     document.removeEventListener('keydown', this._onDocumentKeyDown);
   };
 
+  /**
+   * Сохранить массив элементов со скриншотами
+   * в свойстве photoArray
+   * @param {Array.<Element>} photos
+   */
   Gallery.prototype.setPictures = function(photos) {
     //принимает на вход массив объектов Photo и сохраняет его
     this.photoArray = photos;
   };
 
+  /**
+   * Сделать фотографию активной
+   * в свойстве photoArray
+   * @param {number} index
+   */
   Gallery.prototype.setCurrentPicture = function(index) {
-    //берет фотографию с переданным индексом из массива фотографий и отрисовывает показывает ее в галерее
-    // , обновляя DOM-элемент .overlay-gallery: добавляет в конец элемента .overlay-gallery-preview фотографию
-    // и обновляет блоки .preview-number-current и .preview-number-total.
+    // Берем фотографию с переданным индексом из массива фотографий
+    // и показываем ее в галерее, обновляя DOM-элемент .overlay-gallery:
+    //  - добавляем в конец элемента .overlay-gallery-preview фотографию
+    //  - обновляем блоки .preview-number-current и .preview-number-total.
     if (this._currentPhoto === index) {
       return;
     }
 
     this._currentPhoto = index;
+    /**
+     * type {Image}
+     */
     var image = new Image();
     image.src = this.photoArray[index].src;
 
@@ -107,18 +161,18 @@ define([
     }
   };
 
+  /**
+   * @param {Event} event
+   */
   Gallery.prototype._onDocumentKeyDown = function(event) {
-
     switch (event.keyCode) {
-      case keys.escape:
+      case Keys.escape:
         this.hide();
         break;
-
-      case keys.right:
+      case Keys.right:
         this._onRightControlClick();
         break;
-
-      case keys.left:
+      case Keys.left:
         this._onLeftControlClick();
         break;
     }

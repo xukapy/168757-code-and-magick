@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Контроль ввода и валидация формы ввода отзыва об игре
+ */
+
 'use strict';
 
 define([
@@ -22,8 +26,18 @@ define([
   formUserNameInput.value = docCookies.getItem('user');
   // «Имя пользователя» — обязательное поле
   formUserNameInput.required = true;
-  // Поле «Описание» становится обязательным, если поле «Оценка» ниже 3
+
+  /**
+   * Поле «Описание» становится обязательным,
+   * если поле «Оценка» ниже этой константы
+   * @constant {number}
+   */
   var MAX_NOREQUIRED_MARK = 3;
+
+  /**
+   * Оценка по умолчанию
+   * @constant {number}
+   */
   var DEFAULT_MARK = 3;
   // Элементы формы
   var formElement = formUserNameInput.form;
@@ -37,8 +51,12 @@ define([
   var reviewMark = docCookies.getItem('mark') || DEFAULT_MARK;
   formElement['review-mark-' + reviewMark].checked = true;
 
-  //«ссылки» исчезают из блока по мере заполнения полей формы.
-  //когда все обязательные поля заполнены, блок .review-fields исчезает целиком
+  /**
+   * Управление TO-DO списком ссылок:
+   * «ссылки» исчезают из блока по мере заполнения полей формы.
+   * Когда все обязательные поля заполнены,
+   * блок .review-fields исчезает целиком
+   */
   function setReviewBlockVisibility() {
     if (formReviewFieldName.classList.contains('invisible') && formReviewFieldText.classList.contains('invisible')) {
       formReviewFieldBlock.classList.add('invisible');
@@ -49,7 +67,9 @@ define([
     }
   }
 
-  //Управление видимостью ревью ссылки на тестовое поле
+  /**
+  * Управление видимостью ревью ссылки на тестовое поле
+  */
   function setReviewFieldTextVisibility() {
     if (formReviewText.value === '' && formReviewText.required ) {
       formReviewFieldText.classList.remove('invisible');
@@ -59,7 +79,9 @@ define([
     setReviewBlockVisibility();
   }
 
-  //Управление видимостью ревью ссылки на имя пользователя
+  /**
+   * Управление видимостью ревью ссылки на имя пользователя
+   */
   function setReviewFieldUserNameVisibility() {
     if (formUserNameInput.value === '') {
       formReviewFieldName.classList.remove('invisible');
@@ -68,7 +90,11 @@ define([
     }
     setReviewBlockVisibility();
   }
-  //Управление обязательносью ввода Отзыва
+
+  /**
+   * Управление обязательносью ввода Отзыва
+   * @param {number} mark
+   */
   function setRequirePropertyByMark(mark) {
     if (mark < MAX_NOREQUIRED_MARK) {
       formReviewText.required = true;
@@ -101,8 +127,12 @@ define([
     };
   }
 
-  // При отправке формы сохраним в cookies последние валидные данные имени пользователя и его оценки
-  // Срок жизни cookie — количество дней, прошедшее с моего ближайшего дня рождения
+  /**
+   * При отправке формы сохраняем в cookies последние
+   * валидные данные имени пользователя и его оценки.
+   * Срок жизни cookie — количество дней, прошедшее
+   * с моего ближайшего дня рождения
+   */
   formElement.onsubmit = function(evt) {
     //Прерываем дефолтное поведения события
     evt.preventDefault();
