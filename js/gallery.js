@@ -208,11 +208,26 @@ define([
   };
 
   /**
+   * Установка хеша адреса по индексу скриншота
+   * @param {number} [index]
+   * @private
+   */
+  Gallery.prototype._setLocationHash = function(index) {
+    if (typeof index === 'undefined') {
+      location.hash = '';
+    } else {
+      if (index >= 0 || index < this.photoArray.length) {
+        location.hash = 'photo' + '/' + this.photoArray[index].src;
+      }
+    }
+  };
+
+  /**
    * Обработчик закрытия галереи
    * @private
    */
   Gallery.prototype._onCloseClick = function() {
-    location.hash = '';
+    this._setLocationHash();
   };
 
   /**
@@ -220,9 +235,7 @@ define([
    * @private
    */
   Gallery.prototype._onLeftControlClick = function() {
-    if (this._currentPhoto > 0) {
-      location.hash = 'photo' + '/' + this.photoArray[this._currentPhoto - 1].src;
-    }
+    this._setLocationHash(this._currentPhoto - 1);
   };
 
   /**
@@ -230,9 +243,7 @@ define([
    * @private
    */
   Gallery.prototype._onRightControlClick = function() {
-    if (this._currentPhoto < this.photoArray.length - 1 ) {
-      location.hash = 'photo' + '/' + this.photoArray[this._currentPhoto + 1].src;
-    }
+    this._setLocationHash(this._currentPhoto + 1);
   };
 
   /**
