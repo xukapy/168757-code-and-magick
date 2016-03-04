@@ -32,7 +32,49 @@ define([
      * @private
      */
     this._data = data;
+    this._onReviewQuizClick = this._onReviewQuizClick.bind(this);
   }
+
+  /**
+   * Обработка клика на полезности отзыва
+   * Защита от накрутки полезности
+   * Возможность изменить свое мнение
+   * @param {Event} event
+   * @private
+   */
+  Review.prototype._onReviewQuizClick = function(event) {
+
+    event.preventDefault();
+
+    var yesQuiz = this.element.querySelector('.review-quiz-answer-yes');
+    var noQuiz = this.element.querySelector('.review-quiz-answer-no');
+
+    if (event.target.classList.contains('review-quiz-answer-no')
+       && !noQuiz.classList.contains('review-quiz-answer-active')) {
+
+      if (yesQuiz.classList.contains('review-quiz-answer-active')) {
+        //Если мы передумали
+        this._data.review_usefulness--;
+        yesQuiz.classList.remove('review-quiz-answer-active');
+      }
+
+      this._data.review_usefulness--;
+      noQuiz.classList.add('review-quiz-answer-active');
+
+    } else if (!event.target.classList.contains('review-quiz-answer-no')
+      && !yesQuiz.classList.contains('review-quiz-answer-active')) {
+
+      if (noQuiz.classList.contains('review-quiz-answer-active')) {
+        //Если мы передумали
+        this._data.review_usefulness++;
+        noQuiz.classList.remove('review-quiz-answer-active');
+      }
+
+      this._data.review_usefulness++;
+      yesQuiz.classList.add('review-quiz-answer-active');
+
+    }
+  };
 
   /**
    * Метод отрисовки отзыва.
@@ -72,6 +114,8 @@ define([
      * @type {Element}
      */
     this.element = template.content.children[0].cloneNode(true);
+
+    this.element.querySelector('.review-quiz').addEventListener('click', this._onReviewQuizClick );
 
     /**
      * Дефолтная картинка аватара критика
